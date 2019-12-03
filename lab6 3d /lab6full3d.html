@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+		</style>
+	</head>
+	
+	<body>
+		<!--(1) Create HTML BLANK HTML FILE  -->
+		
+        <!--(2 )Include three.js in your HTML file header-->
+		<script src="three.js"></script>
+		
+		<script type="text/javascript">
+
+			// Creates width and height 
+			var width = window.innerWidth;
+			var height = window.innerHeight;
+			
+			// (3) Add a scene
+			var scene = new THREE.Scene();
+			
+			//(4) Create a sphere and add it to the scene
+			var geometry = new THREE.SphereGeometry(1, 32, 32);
+
+			// Use  MeshBasic 
+			//var sphereMaterial = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+
+			//12.Change your material to a MeshLambertMaterial.
+
+			var sphereMaterial = new THREE.MeshLambertMaterial( {color: 0x00ff00} );
+
+			//final sphere with material
+	            var sphere = new THREE.Mesh(geometry, sphereMaterial);
+            
+			scene.add(sphere);
+         
+         	//(9). Set the wireframe property in the MeshBasicMaterial parameter
+
+         	//10. Reset the wireframe property to false, for the next few steps in the exercise.
+
+         	/*
+         	 var wireframe = new THREE.WireframeHelper(sphere, 0xffffff);
+            wireframe.material.linewidth = 2;
+            scene.add(wireframe);*/
+          
+
+			//(5) Add a camera with a field of view to be 80
+			var camera = new THREE.PerspectiveCamera(80, width/height, 0.1, 9000);
+			camera.position.z = 10;
+	    	camera.position.x = 1;
+
+			//(6)Add a renderer
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize(width, height);
+			document.body.appendChild(renderer.domElement);
+			
+
+			// (11) Add a directional light.(Code from Q sheet)
+			var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+			directionalLight.position.set(0, 1, 2);
+			scene.add(directionalLight);
+
+			//(Advanced Part 1) Add a plane to the scene
+			var geometry = new THREE.PlaneGeometry(5, 20, 32);
+
+			var material = new THREE.MeshBasicMaterial( {color: 0xffffff, side: THREE.DoubleSide} );
+			var plane = new THREE.Mesh(geometry, material);
+			scene.add(plane);
+
+			// Plane position and rotation
+			plane.position.set(-4, 0, -4);
+			plane.rotation.set(0, 45, 0);
+			
+			// Add a spotlight
+			var spotLight = new THREE.SpotLight(0xffffff);
+			spotLight.position.set(3.5, 0, 2);
+			spotLight.lookAt(plane.position);
+           
+			scene.add(spotLight);
+            
+			// Add Camera helper function
+			var helper = new THREE.CameraHelper(spotLight.shadow.camera);
+			scene.add(helper);
+
+
+			//(15). Have the sphere slowly change in colour.
+			var color = new THREE.Color(Math.random(), Math.random(), Math.random());
+
+			var velocity = 0.01;
+            
+			// (7)Add and call a render() loop function. Have it rotate the sphere (as detailed below).
+
+			function render() {
+				requestAnimationFrame(render);
+				
+				// Code to rotate sphere
+				sphere.rotateX(Math.PI/180);
+				sphere.rotateY(Math.PI/180);
+				
+				// Translation  moves sphere left and right
+				sphere.position.x += velocity;	// World coordinates
+				//sphere.translateX(velocity);		// Local coordinates
+                
+                //Stackoverflow Answer
+                if (sphere.position.x >= 2 || sphere.position.x <= 0) {
+                    velocity *= -1;
+                }
+
+				//(15). Have the sphere slowly change in colour.
+                // Slowly change in colour
+				sphere.material.color.lerp(color, 0.05);
+                
+                if (sphere.material.color.getHex() == color.getHex()) {
+                    // Create a new colour to transition to
+					color = new THREE.Color(Math.random(), Math.random(), Math.random());
+				}
+				
+				renderer.render(scene, camera);
+			}
+			//(8.) call method View  sphere.
+			//(13) Now view your sphere after changing material
+			render();
+		</script>
+	</body>
+</html>

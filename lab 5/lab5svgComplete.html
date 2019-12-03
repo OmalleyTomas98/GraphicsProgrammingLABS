@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style type="text/css">
+			svg {
+				border: 1px solid black;
+			}
+		  
+            /*(9) Use of  CSS to set the colours of the circle instead of using attributes */
+
+            /*(1) Create blank HTML file*/
+			circle {
+				fill: yellow;
+				stroke: black;
+			}
+			rect {
+				fill: pink;
+				stroke: black;
+			}
+			triangle {
+				fill: brown;
+				stroke: black;
+			}
+
+		</style>
+	</head>
+	
+	<body>
+		<svg>
+			<!--  (3)Adds circle with colour  set in css -->
+			<!--  (7) circle drawn on top of Rectangle -->
+			<circle id="circle" cx="260" cy="40" r="20"/> 
+		
+            <!-- (4) Adds  a rectangle  -->
+			<rect x="220" y="60" width="75" height="50" fill="rgb(0, 0, 255)"/>
+			
+            <!--(6)Add name -->
+			<text x="10" y="50" font-size="24" fill="purple">Tomás</text>
+
+            <!-- (Advanced 1 ) Draw PacMan on the screen using SVG  using the path command -->
+			<!-- Resource -- https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths -->
+			<path d="M175 75 A 35.35 35.35, 0, 1, 1, 175 25 L 150 50 Z"	fill="yellow" stroke="black"/>
+		</svg>
+		
+		<script type="text/javascript">
+
+			// Get a handle to the element with id circle
+			var circle = document.getElementById("circle");
+
+			// Advanced part (2)Move the circle to (260, 130) after 1 second
+			setTimeout(function () {
+				circle.setAttribute("cx", 260);
+				circle.setAttribute("cy", 130);
+			}, 1000);
+			
+			//Advanced part (3) Change the colour of the circle to green after 2 seconds
+			setTimeout(function () {
+				circle.style.fill = "green";
+			},2000);
+		</script>
+	</body>
+</html>

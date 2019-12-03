@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>G0036118 Lab-1</title>
+    <style>
+        /*(1) Declare HTML canvas */
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        /*(2) Open this project in Chrome */
+        /* (3) Draw  border to the canvas*/
+        canvas {
+                border: solid black 10px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id='canvas' style='border: 10px solid; width: 800px; height: 600px;'>
+
+    </canvas>
+    <script>
+
+        //(4)Size of canvas changed in < canvas id >
+        //declare the canvas
+        var canvas = document.getElementById('canvas');
+        canvas.width = canvas.scrollWidth;
+        canvas.height = canvas.scrollHeight;
+
+        //declare it retriveving/creating 2-dimensional shape
+        var ctx = canvas.getContext('2d');
+
+        // (5) -Added my name on canvas
+        ctx.font = "20px Georgia";
+        ctx.fillStyle = "rgb(255, 0, 0)";
+        ctx.fillText("Tomas O'Malley!", 400, 300);
+
+        //(6)add different fillStyle Colour to rectangle
+        //ctx.fillStyle = "rgb(0, 0, 255)";
+        //(8)Add 40% transperency to shapes
+        //ctx.fillStyle = "rgba(0, 0, 255 ,0.6)";
+        //(7)Change the dimensions of the rectangle
+        ctx.fillRect(50, 50, 200, 100);
+
+        //(8) Draw a triangle on the canvas
+        //Begins new path and draws a triangle
+        ctx.beginPath();
+        ctx.moveTo(100, 100);
+        ctx.lineTo(100, 300);
+        ctx.lineTo(300, 300);
+        ctx.closePath();
+        // the outline
+        ctx.lineWidth = 10;
+        //(9)Added transperency of 40%
+        ctx.fillStyle = "rgb(255, 50, 198, 0.6)";
+        //stroke() creates lined border around shaped
+        ctx.stroke();
+        ctx.closePath();
+        ctx.beginPath();
+
+        //(10)creates circle x1 
+        ctx.arc(350, 100, 50, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "red";
+        ctx.stroke();
+        ctx.fillStyle = "rgba(255, 50, 198, 0.5)";
+
+        //Begins new path to create a new shape 
+        ctx.beginPath();
+
+        //(10) creates circle  x2 
+        ctx.arc(550, 100, 50, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(11, 13, 255, 0.6)";
+        ctx.strokeStyle = "red";
+        ctx.stroke();
+        ctx.fill();
+
+        // fills in the background of the shape
+        ctx.fill();
+
+         // (10) Draw a red square with a blue circle fitting perfectly inside it
+        ctx.beginPath();
+        ctx.fillStyle = "rgb(255, 0, 0)";
+        ctx.fillRect(50, 300, 200, 200);
+        ctx.beginPath();
+        ctx.arc(150, 400, 100, 0, 2 * Math.PI, false);
+        ctx.fillStyle = "rgb(0, 255, 0)";
+        ctx.fill();
+
+        //Advanced Part 1 
+        // Draw a pac-man shape
+        ctx.beginPath();
+        ctx.arc(700, 400, 100, 0.2 * Math.PI, 1.8 * Math.PI, false);
+
+        ctx.lineTo(700, 400);
+        ctx.closePath();
+        ctx.lineWidth = 5;
+        ctx.stroke();
+        ctx.fillStyle = "rgb(255, 255, 0)"; // Yellow
+        ctx.fill();
+        // Drawing  pac-man's eye
+        ctx.beginPath();
+        ctx.arc(705, 350, 10, 0, 2 * Math.PI, false);
+        ctx.lineTo(700, 400);
+        ctx.fillStyle = "rgb(0, 0, 0)";  
+        ctx.fill();
+
+    </script>
+</body>
+
+</html>
