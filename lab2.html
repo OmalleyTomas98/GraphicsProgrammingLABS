@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="UTF-8">
+      <title>Canvas</title>
+      <style type="text/css">
+
+        /* (1) - Create a border */
+        /* (2) Added my name above canvas declaration*/
+
+         canvas { background: #eee;  border: 10px; color: black;
+         }
+         body {
+         }
+      </style>
+   </head>
+   <body>
+      <h1>-----------------------</h1>
+      <h1>Tomás 0'Malley-G00361128</h1>
+      <h1>-----------------------</h1>
+
+      <canvas id="myCanvas" width="480" height="320"></canvas>
+      <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+
+
+      <script type="text/javascript">
+  //LAB 1 ADD IN THE HEADER 
+
+//Use JQUERY FOR  WASD keys 
+
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+//Variable Declaration
+const mouse = {
+  x: innerWidth / 2,
+  y: innerHeight / 2
+}
+
+//Event listener instantiate the ball object x+y where the user cursor double clicks
+addEventListener('mousemove', (event) => {
+  mouse.x = event.clientX
+  mouse.y = event.clientY
+})
+
+//list the random colours
+const colours = [
+  'red',
+  'blue',
+  'green',
+  'yellow',
+  '#FF7F66'
+];
+
+//return the random colours 
+function randomColour(colours) {
+  return colours[Math.floor(Math.random() * colours.length())];
+}
+
+
+//ball collision detection
+function getDistance(x1, x2, y1, y2) {
+  let xDistance = x2 - x1;
+  let yDistance = y2 - y1;
+
+  return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+
+
+}
+
+// ball object
+function Ball(x, y, r, dx, dy, applyForces, controls, colours, mass) {
+  this.x = x; // Starting X position
+  this.y = y;; // Starting Y position
+  this.r = r; // Radius
+  this.dx = 2; //x velocity
+  this.dy = -2; //y velocity
+  this.gravity = 0.98; //Ball Gravity 
+  this.colours = colours; //Instantiate new colour for ball
+  this.applyForces = applyForces; //Force for collision
+  this.mass = this.mass; //Add a mass  to the  ball
+  this.gravity = 0.98; // Decrease velocity continually
+  this.traction = 0.75; // Decrease velocity when rolling on ground
+  this.controls = 1; //Impact on WASD keys
+
+
+  //Draw a fresh instance of the ball object 
+  this.draw = function () {
+    ctx.beginPath();
+
+    //slices for the peace sign 
+    var slices = 3
+
+    // Draw one arc and draw lines afterwards
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2, false);
+
+    //Adding  peace symbol add 3 lines to the current Circle
+    for (var i = 0; i < slices; ++i) {
+
+      toX = this.x + (this.r * Math.cos((Math.PI * 2 / slices) * i));
+
+      toY = this.y + (this.r * Math.sin((Math.PI * 2 / slices) * i));
+
+      //update 
+      ctx.moveTo(this.x, this.y);
+      ctx.lineTo(toX, toY);
+
+      //adding thicker lines 
+      ctx.lineWidth = 5;
+
+      //adding colour
+      ctx.fillStyle = this.colours;
+
+      //fill the shape 
+      ctx.fill();
+    }
+    //add ball stroke 
+    ctx.stroke();
+
+  }
+}
+// An array of ball objects each with different properties set 
+var balls = [
+
+  // ------(x, y, r, dx, dy ,applyForces, controls , colours , mass) 
+  new Ball(40, 40, 30, 0, 0, false, true, 'blue', 10), // Ball without gravity has controls and colour
+  // No initial velocity
+  new Ball(50, 200, 30, 0, 0, true, true, 'purple', 2), // Ball with gravity has controls and colour
+
+  new Ball(50, 250, 30, 0, 0, false, true, 'yellow', 1) // Ball without  gravity  has  controls and colour
+
+  //can create 7 ball objects
+
+];
+// Get the animation going.
+
+
+// console.log(getDistance(Ball.x , Ball.y , Ball.x , Ball.y));
+repeatme();
+
+//Constantly repeat the Program
+function repeatme() {
+  // Clear the canvas AT EACH FRAME
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Draw each ball in the array
+  for (var i = 0; i < balls.length; ++i) {
+    var ball = balls[i];
+
+    // Draw the ball
+    ball.draw();
+
+    // Calculate the balls next position
+    calcNewPosition(ball);
+
+  }
+  window.requestAnimationFrame(repeatme);
+}
+
+//CALCULATE THE POSOITON OF THE BALL
+function calcNewPosition(ball) {
+
+
+  //When there is a collison they change to the colour WASNT WORKING 
+  if (getDistance(ball.x, ball.y, ball.x, ball.y) < ball.r + ball.r) {
+    ctx.fillStyle=this.colours;
+    
+    //Output to the screen once there is a collision
+    console.log('Collision');
+    ctx.font = "20px Arial";
+    //Give  a colour 
+    ctx.fillStyle = 'red';
+    //Output text to the screen
+    ctx.fillText("Collision!", 50, 200);
+
+
+    //Elastic ball Collision from Brians Notes
+    dx = balls[0].x - balls[1].x;
+    dy = balls[0].y - balls[1].y;
+
+    collision_angle = Math.atan2(dy, dx);
+
+    magnitude_1 = Math.sqrt(balls[0].xVel * balls[0].xVel + balls[0].yVel * balls[0].yVel);
+    magnitude_2 = Math.sqrt(balls[1].xVel * balls[1].xVel + balls[1].yVel * balls[1].yVel);
+
+    direction_1 = Math.atan2(balls[0].yVel, balls[0].xVel);
+    direction_2 = Math.atan2(balls[1].yVel, balls[1].xVel);
+    new_xVel_1 = magnitude_1 * Math.cos(direction_1 - collision_angle);
+    new_yVel_1 = magnitude_1 * Math.sin(direction_1 - collision_angle);
+    new_xVel_2 = magnitude_2 * Math.cos(direction_2 - collision_angle);
+    new_yVel_2 = magnitude_2 * Math.sin(direction_2 - collision_angle);
+    final_xVel_1 = ((balls[0].mass - balls[1].mass) * new_xVel_1 + (balls[1].mass + balls[1].mass) * new_xVel_2) / (balls[0].mass + balls[1].mass);
+    final_xVel_2 = ((balls[0].mass - balls[0].mass) * new_xVel_1 + (balls[1].mass + balls[0].mass) * new_xVel_2) / (balls[0].mass + balls[1].mass);
+    final_yVel_1 = new_yVel_1;
+    final_yVel_2 = new_yVel_2;
+    balls[0].xVel = Math.cos(collision_angle) * final_xVel_1 + Math.cos(collision_angle + Math.PI / 2) * final_yVel_1;
+    balls[0].yVel = Math.sin(collision_angle) * final_xVel_1 + Math.sin(collision_angle + Math.PI / 2) * final_yVel_1;
+    balls[1].xVel = Math.cos(collision_angle) * final_xVel_2 + Math.cos(collision_angle + Math.PI / 2) * final_yVel_2;
+    balls[1].yVel = Math.sin(collision_angle) * final_xVel_2 + Math.sin(collision_angle + Math.PI / 2) * final_yVel_2;
+
+  } else {
+
+    //should remain same colour
+    //ctx.fillStyle =this.colours;
+
+    ctx.fillStyle = 'red';
+    // ctx.fillText("Resting!", 10, 10);
+  }
+
+
+  console.log(getDistance(ball.x, ball.y, ball.x, ball.y));
+
+  //Ball Edge Collision Detection x axis 
+  if (ball.x + ball.dx > canvas.width - ball.r || ball.x + ball.dx < ball.r) {
+    ball.dx = -ball.dx;
+  }
+
+  // (7)Edge Ball Collision Detection y axis  
+  if (ball.y + ball.dy > canvas.height - ball.r || ball.y + ball.dy < ball.r) {
+    ball.dy = -ball.dy;
+  }
+  // Apply gravity by increasing downward y velocity
+
+  if (ball.applyForces) {
+    ball.dy += ball.gravity;
+  }
+  // Update the y location.
+  ball.y += ball.dy;
+  // Update the x location.
+  ball.x += ball.dx;
+}
+
+// User interaction with keyboard and mouse UP , DOWN , LEFT , RIGHT (WASD)
+// Keyboard event listeners (Using JQuery)
+$(document.body).on('keydown', function (e) {
+  switch (e.which) {
+    // key code for left arrow
+    case 65:
+      //console.log('Left arrow key pressed:');
+      for (var i = 0; i < balls.length; ++i) {
+        //console.log(' Decrease ball ' + i + '\'s X velocity by ' + balls[i].controls);
+        balls[i].dx -= balls[i].controls;
+      }
+      break;
+
+      // key code for up arrow
+    case 87:
+      //console.log('Up arrow key pressed:');
+      for (var i = 0; i < balls.length; ++i) {
+        //console.log(' Decrease ball ' + i + '\'s Y velocity by ' + balls[i].controls);
+        balls[i].dy -= balls[i].controls;
+      }
+      break;
+      // key code for right arrow
+    case 68:
+      //console.log('Right arrow key pressed:');
+      for (var i = 0; i < balls.length; ++i) {
+        //console.log(' Increase ball ' + i + '\'s X velocity by ' + balls[i].controls);
+        balls[i].dx += balls[i].controls;
+      }
+      break;
+
+      // key code for down arrow
+    case 83:
+      //console.log('Down arrow key pressed:');
+      for (var i = 0; i < balls.length; ++i) {
+        //console.log(' Increase ball ' + i + '\'s Y velocity by ' + balls[i].controls);
+        balls[i].dy += balls[i].controls;
+      }
+      break;
+  }
+});
+
+// Reposition the ball using mouse click event
+canvas.addEventListener("click", function (event) {
+  for (var i = 0; i < balls.length; ++i) {
+    balls[i].x = event.clientX;
+    balls[i].y = event.clientY;
+  }
+});
+      </script>
+   </body>
+</html>
